@@ -9,3 +9,11 @@
     text-transform: uppercase;
     color: #FFF;
 }
+
+.ErrorMessage {
+    color: red;
+}
+
+.BorderDanger {
+    border-color: red;
+}
