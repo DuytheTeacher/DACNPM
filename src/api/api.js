@@ -4,7 +4,7 @@ import TokenService from "./local.service";
 const instance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -12,7 +12,7 @@ instance.interceptors.request.use(
   (config) => {
     const token = TokenService.getLocalAccessToken();
     if (token) {
-      config.headers["authorization"] = token;
+      config.headers["Authorization"] = `Bearer ${token}`;
       config.headers["x-access-token"] = token;
     }
     return config;
@@ -35,7 +35,7 @@ instance.interceptors.response.use(
         originalConfig._retry = true;
 
         try {
-          const rs = await instance.post("/admin/refresh_token", {
+          const rs = await instance.post("/admin/refreshToken", {
             refreshToken: TokenService.getLocalRefreshToken(),
           });
 

@@ -10,9 +10,8 @@ const login = async (userName, password) => {
 
     if (resp.data.status === true) {
       const fullUserData = resp.data.data;
-      TokenService.setUser(
-        JSON.stringify({ ...fullUserData })
-      );
+      TokenService.setUser(fullUserData);
+      return fullUserData;
     } else {
       throw resp.data.message;
     }

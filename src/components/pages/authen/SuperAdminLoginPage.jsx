@@ -12,10 +12,12 @@ import {
   makeStyles,
   TextField,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { errorMessage, successMessage } from "../../../slices/messageSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { setUser } from "../../../slices/userSlice";
+import TokenService from "../../../api/local.service";
 
 function SuperAdminLoginPage() {
   const useStyles = makeStyles({
@@ -57,7 +59,19 @@ function SuperAdminLoginPage() {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const classes = useStyles();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const navigate = useNavigate();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const location = useLocation();
+  const from = location.state ? location.state.from.pathname : "../dashboard";
+  const user = TokenService.getUser();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      navigate(from);
+    }
+  }, []);
 
   const signInSchema = Yup.object().shape({
     userName: Yup.string()
@@ -82,8 +96,13 @@ function SuperAdminLoginPage() {
       onSubmit: async (values) => {
         try {
           setLoading(true);
-          await SuperAdminService.login(values.userName, values.password);
+          const resp = await SuperAdminService.login(
+            values.userName,
+            values.password
+          );
+          dispatch(setUser({ user: resp }));
           dispatch(successMessage({ message: "Login successfully!" }));
+          navigate(from, { replace: true });
         } catch (e) {
           dispatch(errorMessage({ message: e }));
         }
@@ -142,18 +161,6 @@ function SuperAdminLoginPage() {
             </Box>
             {loginForm()}
           </CardContent>
-          <CardActions>
-            <span>
-              Don't have an account?{" "}
-              <Link
-                to="register"
-                className={classes.registerLink}
-                color="primary.main"
-              >
-                Register
-              </Link>
-            </span>
-          </CardActions>
         </Card>
       </Box>
     </Container>
