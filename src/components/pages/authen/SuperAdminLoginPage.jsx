@@ -1,18 +1,64 @@
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  FloatingLabel,
-  Row,
-  Form,
-} from "react-bootstrap";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import SuperAdminService from "../../../api/superAdmin.service";
 
-import "./SuperAdminLoginPage.css";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Container,
+  makeStyles,
+  TextField,
+} from "@material-ui/core";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { errorMessage, successMessage } from "../../../slices/messageSlice";
+import { useState } from "react";
 
 function SuperAdminLoginPage() {
+  const useStyles = makeStyles({
+    root: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "#ACDDDE",
+    },
+
+    card: {
+      minWidth: 275,
+      maxWidth: 450,
+    },
+
+    headTitle: {
+      padding: 40,
+      color: "#FFF",
+      fontSize: 27,
+      textTransform: "uppercase",
+      textAlign: "center",
+      fontWeight: "bold",
+    },
+
+    buttonContainer: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+
+    loginButton: {
+      marginTop: 10,
+    },
+
+    registerLink: {
+      textDecoration: "none",
+    },
+  });
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const classes = useStyles();
+  const [loading, setLoading] = useState(false);
+
   const signInSchema = Yup.object().shape({
     userName: Yup.string()
       .min(3, "Your username is too short (3-50 characters)")
@@ -23,50 +69,9 @@ function SuperAdminLoginPage() {
       .required("Password is required"),
   });
 
-  const formGroup = (formik) => (
-    <form onSubmit={formik.handleSubmit}>
-      <FloatingLabel
-        htmlFor="userName"
-        custom
-        label="Username"
-        className="mb-3"
-        variant="danger"
-      >
-        <Form.Control
-          type="text"
-          id="userName"
-          name="userName"
-          placeholder="Your username here"
-          value={formik.values.userName}
-          onChange={formik.handleChange}
-        />
-      </FloatingLabel>
-      {formik.errors.userName && formik.touched.userName ? (
-        <div className="ErrorMessage mb-3">{formik.errors.userName}</div>
-      ) : null}
-      <FloatingLabel htmlFor="password" label="Password">
-        <Form.Control
-          id="password"
-          name="password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          type="password"
-          placeholder="Password"
-        />
-        {formik.errors.password && formik.touched.password ? (
-          <div className="ErrorMessage my-3">{formik.errors.password}</div>
-        ) : null}
-      </FloatingLabel>
-
-      <Button variant="primary" type="submit" className="mt-4">
-        Login
-      </Button>
-
-      <div className="mt-2">Don't have an account? Register</div>
-    </form>
-  );
-
   const loginForm = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const dispatch = useDispatch();
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const formik = useFormik({
       initialValues: {
@@ -75,28 +80,82 @@ function SuperAdminLoginPage() {
       },
       validationSchema: signInSchema,
       onSubmit: async (values) => {
-        await new Promise((r) => setTimeout(r, 500));
-        alert(JSON.stringify(values, null, 2));
+        try {
+          setLoading(true);
+          await SuperAdminService.login(values.userName, values.password);
+          dispatch(successMessage({ message: "Login successfully!" }));
+        } catch (e) {
+          dispatch(errorMessage({ message: e }));
+        }
+        setLoading(false);
       },
     });
 
     return (
-      <Row>
-        <Col xl={12}>{formGroup(formik)}</Col>
-      </Row>
+      <form onSubmit={formik.handleSubmit} noValidate autoComplete="off">
+        <TextField
+          fullWidth
+          id="userName"
+          name="userName"
+          label="Username"
+          value={formik.values.userName}
+          onChange={formik.handleChange}
+          error={formik.touched.userName && Boolean(formik.errors.userName)}
+          helperText={formik.touched.userName && formik.errors.userName}
+          margin="normal"
+        />
+        <TextField
+          fullWidth
+          id="password"
+          name="password"
+          label="Password"
+          type="password"
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
+          margin="normal"
+        />
+
+        <Box className={classes.buttonContainer}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={loading}
+            className={classes.loginButton}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </Button>
+        </Box>
+      </form>
     );
   };
 
   return (
-    <Container style={{ height: "100vh", overflow: "hidden" }} fluid>
-      <Row className="justify-content-center h-100 align-content-center">
-        <Col xs="auto">
-          <Card className="text-center" style={{ width: "30rem" }}>
-            <div className="CardHeader">SuperAdmin Login</div>
-            <Card.Body>{loginForm()}</Card.Body>
-          </Card>
-        </Col>
-      </Row>
+    <Container maxWidth="xl" disableGutters>
+      <Box height="100vh" maxWidth="100vw" className={classes.root}>
+        <Card className={classes.card} variant="outlined">
+          <CardContent>
+            <Box bgcolor="primary.light" className={classes.headTitle}>
+              SuperAdmin Login
+            </Box>
+            {loginForm()}
+          </CardContent>
+          <CardActions>
+            <span>
+              Don't have an account?{" "}
+              <Link
+                to="register"
+                className={classes.registerLink}
+                color="primary.main"
+              >
+                Register
+              </Link>
+            </span>
+          </CardActions>
+        </Card>
+      </Box>
     </Container>
   );
 }

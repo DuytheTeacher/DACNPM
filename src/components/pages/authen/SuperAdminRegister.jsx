@@ -1,4 +1,3 @@
-import "./SuperAdminRegister.css";
 
 const SuperAdminRegister = () => {
   return (<>
