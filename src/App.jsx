@@ -10,7 +10,8 @@ import { HomePage } from "./components/pages/HomePage";
 import {
   SuperAdminLayout,
   SuperAdminLoginPage,
-  SuperAdminRegister,
+  Dashboard,
+  RegisterAdmin,
 } from "./components/pages";
 
 import "./App.css";
@@ -57,10 +58,19 @@ function App() {
             path="dashboard"
             element={
               <RequireAuth>
-                <SuperAdminRegister />
+                <Dashboard />
               </RequireAuth>
             }
-          />
+          >
+            <Route
+              path="register-admin"
+              element={
+                <RequireAuth>
+                  <RegisterAdmin />
+                </RequireAuth>
+              }
+            />
+          </Route>
         </Route>
       </Routes>
       <Snackbar open={isOpen} autoHideDuration={3000} onClose={handleClose}>

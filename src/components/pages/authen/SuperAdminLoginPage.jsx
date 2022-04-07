@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   Container,
   makeStyles,
@@ -71,7 +70,7 @@ function SuperAdminLoginPage() {
     if (user) {
       navigate(from);
     }
-  }, []);
+  }, [from, navigate, user]);
 
   const signInSchema = Yup.object().shape({
     userName: Yup.string()
