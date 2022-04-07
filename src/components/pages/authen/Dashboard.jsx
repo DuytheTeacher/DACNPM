@@ -9,7 +9,8 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import { LeftSideBar } from "../index";
 import {useRef} from "react";
-import { Outlet } from 'react-router-dom';
+import {Outlet, useNavigate} from 'react-router-dom';
+import TokenService from "../../../api/local.service";
 
 const Dashboard = () => {
   const useStyles = makeStyles((theme) => ({
@@ -26,11 +27,18 @@ const Dashboard = () => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const classes = useStyles();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const navigate = useNavigate();
 
   const leftSideBarRef = useRef(null);
   
   const onLeftSideBarToggle = () => {
     leftSideBarRef.current.toggle(true);
+  }
+
+  const logout = () => {
+    TokenService.removeUser();
+    navigate('../login');
   }
 
   const appBar = () => {
@@ -50,11 +58,11 @@ const Dashboard = () => {
             <Typography variant="h6" className={classes.title}>
               THIEN VY ADMIN
             </Typography>
-            <Button color="inherit">Logout</Button>
+            <Button color="inherit" onClick={logout}>Logout</Button>
           </Toolbar>
         </AppBar>
         <LeftSideBar ref={leftSideBarRef}/>
-        <Container className="py-3 bg-danger">
+        <Container className="py-3">
           <Outlet />
         </Container>
       </>

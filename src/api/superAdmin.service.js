@@ -20,8 +20,26 @@ const login = async (userName, password) => {
   }
 };
 
+const registerAdmin = async (userName, password) => {
+  try {
+    const resp = await api.post("/admin/createAdmin", {
+      userName,
+      password,
+    });
+
+    if (resp.data.status === true) {
+      return resp.data.data;
+    } else {
+      throw resp.data.message;
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const exportedObject = {
   login,
+  registerAdmin
 };
 
 export default exportedObject;
