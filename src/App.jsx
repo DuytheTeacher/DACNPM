@@ -12,6 +12,7 @@ import {
   SuperAdminLoginPage,
   Dashboard,
   RegisterAdmin,
+  VehicleList,
 } from "./components/pages";
 
 import "./App.css";
@@ -67,6 +68,14 @@ function App() {
               element={
                 <RequireAuth>
                   <RegisterAdmin />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="vehicles-list"
+              element={
+                <RequireAuth>
+                  <VehicleList />
                 </RequireAuth>
               }
             />

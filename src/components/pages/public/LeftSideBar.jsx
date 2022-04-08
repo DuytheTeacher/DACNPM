@@ -7,7 +7,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import {NavLink, useNavigate} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles({
   list: {
@@ -21,8 +21,8 @@ const useStyles = makeStyles({
     alignItems: "center",
     justifyContent: "center",
     textDecoration: "none",
-    color: 'rgba(0, 0, 0, 0.54)'
-  }
+    color: "rgba(0, 0, 0, 0.54)",
+  },
 });
 
 const LeftSideBar = forwardRef((props, ref) => {
@@ -56,19 +56,36 @@ const LeftSideBar = forwardRef((props, ref) => {
       <List>
         <ListItem button key={"Create Admin Account"}>
           <NavLink
-              className={classes.navLink}
-              style={(navData) => {
-                return {
-                  color: navData.isActive ? "red" : '',
-                };
-              }}
-              to='register-admin'
-              key='register-admin'
+            className={classes.navLink}
+            style={(navData) => {
+              return {
+                color: navData.isActive ? "red" : "",
+              };
+            }}
+            to="register-admin"
+            key="register-admin"
           >
             <ListItemIcon>
               <SupervisorAccountIcon />
             </ListItemIcon>
             <ListItemText primary={"Create Admin Account"} />
+          </NavLink>
+        </ListItem>
+        <ListItem button key="Vehicles list">
+          <NavLink
+            className={classes.navLink}
+            style={(navData) => {
+              return {
+                color: navData.isActive ? "red" : "",
+              };
+            }}
+            to="vehicles-list"
+            key="vehicles-list"
+          >
+            <ListItemIcon>
+              <SupervisorAccountIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Vehicles list"} />
           </NavLink>
         </ListItem>
       </List>
