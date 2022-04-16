@@ -23,32 +23,30 @@ instance.interceptors.request.use(
 );
 
 instance.interceptors.response.use(
-  (res) => {
+  async (res) => {
+    const originalConfig = res.config;
+    if (
+      !res.data.status &&
+      res.data.error &&
+      originalConfig.url !== "/admin/login"
+    ) {
+      // Access Token was expired
+      try {
+        const rs = await instance.put("/admin/refreshToken", {
+          refreshToken: TokenService.getLocalRefreshToken(),
+        });
+
+        const { token } = rs.data;
+        TokenService.updateLocalAccessToken(token);
+
+        return instance(originalConfig);
+      } catch (_error) {
+        return Promise.reject(_error);
+      }
+    }
     return res;
   },
   async (err) => {
-    const originalConfig = err.config;
-
-    if (originalConfig.url !== "admin/login" && err.response) {
-      // Access Token was expired
-      if (err.response.status === 401 && !originalConfig._retry) {
-        originalConfig._retry = true;
-
-        try {
-          const rs = await instance.post("/admin/refreshToken", {
-            refreshToken: TokenService.getLocalRefreshToken(),
-          });
-
-          const { token } = rs.data;
-          TokenService.updateLocalAccessToken(token);
-
-          return instance(originalConfig);
-        } catch (_error) {
-          return Promise.reject(_error);
-        }
-      }
-    }
-
     return Promise.reject(err);
   }
 );

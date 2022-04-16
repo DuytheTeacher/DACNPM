@@ -6,6 +6,8 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import DriveEtaIcon from "@material-ui/icons/DriveEta";
+import AddBoxIcon from "@material-ui/icons/AddBox";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -83,9 +85,26 @@ const LeftSideBar = forwardRef((props, ref) => {
             key="vehicles-list"
           >
             <ListItemIcon>
-              <SupervisorAccountIcon />
+              <DriveEtaIcon />
             </ListItemIcon>
             <ListItemText primary={"Vehicles list"} />
+          </NavLink>
+        </ListItem>
+        <ListItem button key="Upload new Vehicle">
+          <NavLink
+            className={classes.navLink}
+            style={(navData) => {
+              return {
+                color: navData.isActive ? "red" : "",
+              };
+            }}
+            to="upload-vehicle"
+            key="upload-vehicle"
+          >
+            <ListItemIcon>
+              <AddBoxIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Upload new Vehicle"} />
           </NavLink>
         </ListItem>
       </List>

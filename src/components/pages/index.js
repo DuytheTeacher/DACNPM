@@ -4,3 +4,4 @@ export { default as Dashboard } from "./authen/Dashboard";
 export { default as LeftSideBar } from "./public/LeftSideBar";
 export { default as RegisterAdmin } from "./authen/RegisterAdmin";
 export { default as VehicleList } from "./authen/VehicleList";
+export { default as UploadNewProduct } from "./authen/UploadNewProduct";

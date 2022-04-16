@@ -13,6 +13,7 @@ import {
   Dashboard,
   RegisterAdmin,
   VehicleList,
+  UploadNewProduct,
 } from "./components/pages";
 
 import "./App.css";
@@ -76,6 +77,14 @@ function App() {
               element={
                 <RequireAuth>
                   <VehicleList />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="upload-vehicle"
+              element={
+                <RequireAuth>
+                  <UploadNewProduct />
                 </RequireAuth>
               }
             />
