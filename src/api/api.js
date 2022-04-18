@@ -33,13 +33,18 @@ instance.interceptors.response.use(
       // Access Token was expired
       try {
         const rs = await instance.put("/admin/refreshToken", {
-          refreshToken: TokenService.getLocalRefreshToken(),
+          data: {
+            refreshToken: TokenService.getLocalRefreshToken(),
+          },
         });
 
-        const { token } = rs.data;
-        TokenService.updateLocalAccessToken(token);
+        if (rs.data.satus) {
+          const { token } = rs.data;
+          TokenService.updateLocalAccessToken(token);
 
-        return instance(originalConfig);
+          return instance(originalConfig);
+        }
+        throw rs.data.message;
       } catch (_error) {
         return Promise.reject(_error);
       }

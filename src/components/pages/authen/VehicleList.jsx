@@ -43,7 +43,7 @@ const useStyles = makeStyles({
 const VehicleList = () => {
   const [vehiclesList, setVehiclesList] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [carType, setCarType] = useState(0);
+  const [carType, setCarType] = useState("");
 
   const classes = useStyles();
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -89,10 +89,12 @@ const VehicleList = () => {
       <Card className={classes.card}>
         <CardActionArea>
           <CardMedia
+            component={"img"}
             className={classes.media}
-            image={
+            src={
               vehicle.image_url[0] || "https://source.unsplash.com/HjV_hEECgcM"
             }
+            onLoad={() => URL.revokeObjectURL(vehicle.image_url[0])}
             title={vehicle.name}
           />
           <CardContent>
