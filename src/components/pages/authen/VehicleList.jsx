@@ -38,6 +38,11 @@ const useStyles = makeStyles({
     marginLeft: 8,
     minWidth: 120,
   },
+  desc: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: "ellipsis",
+},
 });
 
 const VehicleList = () => {
@@ -101,17 +106,17 @@ const VehicleList = () => {
             <Typography gutterBottom variant="h5" component="h2">
               {vehicle.name}
             </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
+            <Typography variant="body2" color="textSecondary" component="p" className={classes.desc}>
               {vehicle.description}
             </Typography>
           </CardContent>
         </CardActionArea>
         <CardActions>
           <Button size="small" color="primary">
-            Share
+            Detail
           </Button>
           <Button size="small" color="primary">
-            Learn More
+            Share
           </Button>
         </CardActions>
       </Card>

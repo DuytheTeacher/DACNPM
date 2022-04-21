@@ -5,3 +5,6 @@ export { default as LeftSideBar } from "./public/LeftSideBar";
 export { default as RegisterAdmin } from "./authen/RegisterAdmin";
 export { default as VehicleList } from "./authen/VehicleList";
 export { default as UploadNewProduct } from "./authen/UploadNewProduct";
+export { default as PublicVehicleList } from './public/PublicVehicleList';
+export { default as PublicLayout } from './public/PublicLayout';
+export { default as VehicleDetail } from './public/VehicleDetail';

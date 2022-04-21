@@ -16,8 +16,8 @@ const getVehiclesByDate = async (date) => {
         dateTime: date,
       },
     });
-    if (resp.data.data.status) return resp.data.data;
-    throw resp.data.data.message;
+    if (resp.data.status) return resp.data.data;
+    throw resp.data.message;
   } catch (e) {
     throw e;
   }
@@ -38,10 +38,26 @@ const getVehiclesByType = async (type) => {
 
 const uploadNewProduct = async (product) => {
   try {
-    const resp = await api.post("/vehicles", {
-      data: product,
-    });
+    const resp = await api.post("/vehicles", product);
     return resp.data.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+const getDetail= async (id) => {
+  try {
+    const resp = await api.get('/vehicles/getVehicleId', {
+      params: {
+        _id: id
+      }
+    });
+    
+    if (resp) {
+      return resp.data.data;
+    } else {
+      throw resp.data.message;
+    }
   } catch (e) {
     throw e;
   }
@@ -52,6 +68,7 @@ const exportedObject = {
   getVehiclesByDate,
   getVehiclesByType,
   uploadNewProduct,
+  getDetail
 };
 
 export default exportedObject;

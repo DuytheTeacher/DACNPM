@@ -13,7 +13,7 @@ import {
   Dashboard,
   RegisterAdmin,
   VehicleList,
-  UploadNewProduct,
+  UploadNewProduct, PublicLayout, PublicVehicleList, VehicleDetail
 } from "./components/pages";
 
 import "./App.css";
@@ -41,7 +41,7 @@ function App() {
   const RequireAuth = ({ children }) => {
     const user = TokenService.getUser();
     const location = useLocation();
-    if (!user) {
+    if (!user && !user.type) {
       return (
         <Navigate to="/super-admin/login" state={{ from: location }} replace />
       );
@@ -54,6 +54,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route exact path="/" element={<HomePage />} />
+        <Route path="public" element={<PublicLayout />}>
+          <Route path="vehicles" element={<PublicVehicleList />} />
+          <Route path="vehicles/:vehicleId" element={<VehicleDetail />}/>
+        </Route>
         <Route path="super-admin" element={<SuperAdminLayout />}>
           <Route path="login" element={<SuperAdminLoginPage />} />
           <Route

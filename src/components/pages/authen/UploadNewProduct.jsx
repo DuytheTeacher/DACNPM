@@ -1,6 +1,5 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { setUser } from "../../../slices/userSlice";
 import { errorMessage, successMessage } from "../../../slices/messageSlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -48,7 +47,7 @@ const useStyles = makeStyles({
   },
   imageList: {
     width: 500,
-    height: 450,
+    height: 250,
   },
   imageItem: {
     width: "100%",
@@ -59,7 +58,7 @@ const useStyles = makeStyles({
 
 const UploadNewProduct = () => {
   const [loading, setLoading] = useState(false);
-  const [imageData, setImageData] = useState([]);
+  const [imageData, setImageData] = useState('');
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -76,7 +75,7 @@ const UploadNewProduct = () => {
       .required("Product's description is required"),
     type: Yup.string().required("Product's type is required"),
     price: Yup.number().positive("Invalid price").integer("Invalid price"),
-    license_plates: Yup.string().matches("^[0-9]{2}-[A-Z][0-9][0-9]{4,5}$"),
+    license_plates: Yup.string().matches("^[0-9]{2}-[A-Z][0-9][0-9]{4,5}$")
   });
 
   const uploadForm = () => {
@@ -89,7 +88,7 @@ const UploadNewProduct = () => {
         description: "",
         type: "",
         price: 0,
-        license_plates: "",
+        license_plates: ""
       },
       validationSchema: newProductSchema,
       onSubmit: async (values) => {
@@ -97,7 +96,7 @@ const UploadNewProduct = () => {
           setLoading(true);
           await VehicleService.uploadNewProduct({
             ...values,
-            image_url: [...imageData],
+            image_url: [imageData],
           });
           dispatch(
             successMessage({ message: "Create new Product successfully!" })
@@ -109,38 +108,29 @@ const UploadNewProduct = () => {
       },
     });
 
-    const toBase64 = (file) =>
-      new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(JSON.stringify(reader.result));
-        reader.onerror = (error) => reject(error);
-      });
-
-    const fileSelectedHandler = async (e) => {
-      try {
-        setImageData([...imageData, URL.createObjectURL(e.target.files[0])]);
-      } catch (e) {
-        return console.log(e);
-      }
-    };
-
     return (
       <form onSubmit={formik.handleSubmit} noValidate autoComplete="off">
         <div className={classes.list}>
           <ImageList rowHeight={200} className={classes.imageList} cols={3}>
-            {imageData.map((item) => (
-              <ImageListItem key={item} cols={3} key={item} display={"flex"}>
-                <img
-                  src={item}
-                  className={classes.imageItem}
-                  onLoad={() => URL.revokeObjectURL(item)}
-                />
-              </ImageListItem>
-            ))}
+            <ImageListItem key={imageData} cols={3} display={"flex"}>
+              <img
+                src={imageData}
+                className={classes.imageItem}
+               alt={'image'}/>
+            </ImageListItem>
           </ImageList>
         </div>
-        <input type="file" multiple onChange={fileSelectedHandler} />
+        <TextField
+          fullWidth
+          id="image"
+          name="image"
+          label="Image"
+          value={imageData}
+          onChange={(event) => {
+            setImageData(event.target.value);
+          }}
+          margin="normal"
+        />
 
         <TextField
           fullWidth
